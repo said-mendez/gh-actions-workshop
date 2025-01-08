@@ -1,0 +1,35 @@
+name: "Java backend CI"
+
+# events
+on:
+  push:
+    branches: ["main", "develop"]
+    # paths
+    paths:
+      - "backend/**"
+  pull_request:
+    branches: ["main", "develop"]
+    # paths
+    paths:
+      - "backend/**"
+
+env:
+  java_version: 17
+defaults:
+  run:
+    working-directory: ./backend
+jobs:
+  build: #first job
+    runs-on: ubutnu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4.1.5 # action
+      - name: Use Java ${{ env.java_version }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ env.java_version }}
+          distribution: 'temurin'
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
+      - name: Build with Gradle
+        run: ./gradlew build
